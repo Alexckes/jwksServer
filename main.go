@@ -53,7 +53,8 @@ func main() {
 	// Store the key to file
 	writeFile([]byte(privPem), "private.pem")
 	writeFile([]byte(pubPem), "public.pem")
-	err := http.ListenAndServe(":3333", nil)
+
+	err := http.ListenAndServe(":8080", nil)
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
 	} else if err != nil {
