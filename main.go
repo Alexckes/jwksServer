@@ -5,8 +5,11 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"os"
 )
 
 func generateRsaKeyPair(size int) (privKey *rsa.PrivateKey, pubKey *rsa.PublicKey) {
@@ -50,6 +53,13 @@ func main() {
 	// Store the key to file
 	writeFile([]byte(privPem), "private.pem")
 	writeFile([]byte(pubPem), "public.pem")
+	err := http.ListenAndServe(":3333", nil)
+	if errors.Is(err, http.ErrServerClosed) {
+		fmt.Printf("server closed\n")
+	} else if err != nil {
+		fmt.Printf("error starting server: %s\n", err)
+		os.Exit(1)
+	}
 }
 
 func writeFile(content []byte, filename string) (err error) {
